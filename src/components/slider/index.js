@@ -21,13 +21,15 @@ const marks = [
   },
 ];
 
-function MySlider() {
+function MySlider({ distance, handleChangeDistance }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <Typography id="discrete-slider-restrict">Select a value</Typography>
       <Slider
+        value={distance}
+        onChange={handleChangeDistance}
         step={1}
         marks={marks}
         valueLabelDisplay="auto"

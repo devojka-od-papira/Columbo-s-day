@@ -16,6 +16,9 @@ function App() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [coord, setCoord] = useState(null);
   const [categories, setCategories] = useState(null);
+  const [distance, setDistance] = useState(0);
+  const [activCategory, setActivCategory] = useState("");
+
   const onSubmit = (event) => {
     event.preventDefault();
     axios
@@ -33,14 +36,17 @@ function App() {
   const handleClick = () => {
     setOpen(!open);
   };
-  const getCategories = (categorie) => {
-    console.log("Bojana", categorie);
+  const getCategories = (categories) => {
+    setActivCategory(categories);
     axios
       .get(
-        `https://api.geoapify.com/v2/places?categories=${categorie}&filter=circle:${coord.lon},${coord.lat},5000&limit=20&apiKey=1d376793ac4e40d7aa00db1c2018506a`
+        `https://api.geoapify.com/v2/places?categories=${categories}&filter=circle:${
+          coord.lon
+        },${coord.lat},${
+          distance * 100
+        }&limit=20&apiKey=1d376793ac4e40d7aa00db1c2018506a`
       )
       .then((response) => {
-        console.log("2", response.data);
         setCategories(response.data.features);
       })
       .catch((error) => {
@@ -62,8 +68,10 @@ function App() {
         console.log(error.response);
       });
   };
-  const searchCategories = () => {
-    console.log("1");
+
+  const handleChangeDistance = (event, newValue) => {
+    setDistance(newValue);
+    getCategories(activCategory);
   };
   const clickFlyTo = (data) => {
     const { current = {} } = mapRef;
@@ -110,8 +118,9 @@ function App() {
     <div className="App">
       <MyDrawer
         open={open}
-        onClickRestouranTab={searchCategories}
         getCategorie={getCategories}
+        distance={distance}
+        handleChangeDistance={handleChangeDistance}
       />
       <InputSearch
         handleClick={handleClick}

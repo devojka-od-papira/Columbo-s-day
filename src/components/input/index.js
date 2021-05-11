@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     width: 40,
     height: 40,
-    color: "#E5E5FF",
+    color: "pink",
   },
   divider: {
     height: 28,
