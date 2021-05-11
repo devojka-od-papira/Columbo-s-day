@@ -12,7 +12,7 @@ import MapIcon from "@material-ui/icons/Map";
 import SatelliteIcon from "@material-ui/icons/Satellite";
 import TerrainTwoToneIcon from "@material-ui/icons/TerrainTwoTone";
 import TrafficIcon from "@material-ui/icons/Traffic";
-
+import Categories from "../inputCategories";
 const useStyles = makeStyles({
   list: {
     width: 500,
@@ -22,7 +22,14 @@ const useStyles = makeStyles({
     fontSize: 24,
   },
 });
-const MyDrawer = () => {
+const MyDrawer = ({
+  handleClick,
+  open,
+  onClickHotelTab,
+  onClickMarketTab,
+  onClickFitnessTab,
+  getCategorie,
+}) => {
   const classes = useStyles();
   const listName = [
     { name: "Mapa", icon: <MapIcon /> },
@@ -32,7 +39,7 @@ const MyDrawer = () => {
   ];
   return (
     <div className={classes.list}>
-      <Drawer>
+      <Drawer open={open} variant="persistent">
         <div style={{ width: 425, marginTop: 80 }}>
           <h1 className={classes.h1}>Columbo's day</h1>
           <Divider />
@@ -46,6 +53,7 @@ const MyDrawer = () => {
           </List>
           <Divider />
         </div>
+        <Categories getCategorie={getCategorie} />
       </Drawer>
     </div>
   );

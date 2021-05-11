@@ -33,7 +33,7 @@ function App() {
   const handleClick = () => {
     setOpen(!open);
   };
-  const getCategorie = (categorie) => {
+  const getCategories = (categorie) => {
     console.log("Bojana", categorie);
     axios
       .get(
@@ -111,7 +111,7 @@ function App() {
       <MyDrawer
         open={open}
         onClickRestouranTab={searchCategories}
-        getCategorie={getCategorie}
+        getCategorie={getCategories}
       />
       <InputSearch
         handleClick={handleClick}
