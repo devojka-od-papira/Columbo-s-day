@@ -33,6 +33,7 @@ function Categories({ getCategorie }) {
         )}
         renderInput={(params) => (
           <TextField
+            color="secondary"
             className={classes.textField}
             {...params}
             id="standard-full-width"

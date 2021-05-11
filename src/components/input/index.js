@@ -74,6 +74,7 @@ const InputSearch = ({
         )}
         renderInput={(params) => (
           <TextField
+            color="secondary"
             className={classes.textField}
             {...params}
             label="Search maps"
@@ -90,7 +91,7 @@ const InputSearch = ({
       </IconButton>
       <Divider className={classes.divider} orientation="vertical" />
       <IconButton
-        color="primary"
+        color="secondary"
         className={classes.iconButton}
         aria-label="directions"
       >
