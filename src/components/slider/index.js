@@ -13,11 +13,11 @@ const useStyles = makeStyles({
 const marks = [
   {
     value: 0,
-    label: "0 Km",
+    label: "0 m",
   },
   {
     value: 100,
-    label: "100 Km",
+    label: "1000 m",
   },
 ];
 

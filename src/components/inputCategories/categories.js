@@ -1,4 +1,10 @@
 export const listCategories = [
+  // { fullName: "accommodation.hotel", name: "Hotel" },
+  // { fullName: "accommodation.hut", name: "Hut" },
+  // { fullName: "accommodation.chalet", name: "Chalet" },
+  // { fullName: "accommodation.guest_house", name: "Guest house" },
+  // { fullName: "accommodation.hostel", name: "Hostel" },
+  // { fullName: "accommodation.motel", name: "Motel" },
   "accommodation",
   "accommodation.hotel",
   "accommodation.hut",

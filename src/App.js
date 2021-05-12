@@ -69,23 +69,39 @@ function App() {
       });
   };
 
-  const handleChangeDistance = (event, newValue) => {
+  const handleChangeDistance = (event, newValue, data) => {
+    console.log("Bojana", data);
     setDistance(newValue);
     getCategories(activCategory);
+    console.log(activCategory);
   };
   const clickFlyTo = (data) => {
     const { current = {} } = mapRef;
     const { leafletElement: map } = current;
     const latLngCoordinates = {
-      lon: "",
       lat: "",
+      lon: "",
     };
-    latLngCoordinates.lon = data.properties.lon;
     latLngCoordinates.lat = data.properties.lat;
+    latLngCoordinates.lon = data.properties.lon;
     setCoord(latLngCoordinates);
     map.flyTo(latLngCoordinates, 14, {
       duration: 2,
     });
+    const LeafIcon = L.Icon.extend({
+      options: {
+        iconSize: [40, 45],
+        iconAnchor: [22, 94],
+        shadowAnchor: [4, 62],
+        popupAnchor: [-12, -100],
+      },
+    });
+    const myIcon = new LeafIcon({
+      iconUrl: myPin,
+    });
+    const marker = L.marker(latLngCoordinates, { icon: myIcon });
+    marker.addTo(map);
+    marker.bindPopup("This is the selected location").openPopup();
   };
   useEffect(() => {
     const { current = {} } = mapRef;

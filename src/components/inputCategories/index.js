@@ -16,8 +16,10 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(1),
   },
 }));
+
 function Categories({ getCategorie, searchCategories }) {
   const classes = useStyles();
+
   return (
     <div className={classes.root}>
       <Autocomplete
