@@ -27,11 +27,11 @@ function Categories({ getCategorie, searchCategories }) {
         id="auto-complete"
         options={listCategories}
         autoComplete
-        getOptionLabel={(option) => option}
+        getOptionLabel={(option) => option.name}
         includeInputInList
         fullWidth
         renderOption={(option) => (
-          <Box onClick={() => getCategorie(option)}>{option}</Box>
+          <Box onClick={() => getCategorie(option.fullName)}>{option.name}</Box>
         )}
         renderInput={(params) => (
           <TextField

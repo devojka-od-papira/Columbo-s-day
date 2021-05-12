@@ -85,7 +85,7 @@ function App() {
     latLngCoordinates.lat = data.properties.lat;
     latLngCoordinates.lon = data.properties.lon;
     setCoord(latLngCoordinates);
-    map.flyTo(latLngCoordinates, 14, {
+    map.flyTo(latLngCoordinates, 15, {
       duration: 2,
     });
     const LeafIcon = L.Icon.extend({
@@ -102,6 +102,7 @@ function App() {
     const marker = L.marker(latLngCoordinates, { icon: myIcon });
     marker.addTo(map);
     marker.bindPopup("This is the selected location").openPopup();
+    L.circle(latLngCoordinates, { radius: 5000 }).addTo(map);
   };
   useEffect(() => {
     const { current = {} } = mapRef;
