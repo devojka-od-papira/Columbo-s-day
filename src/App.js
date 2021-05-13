@@ -1,12 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
-import { TileLayer, Map, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
+import { TileLayer, Map, Marker, Popup, FeatureGroup } from "react-leaflet";
+import { EditControl } from "react-leaflet-draw";
+import InputSearch from "./components/input";
 import MyDrawer from "./components/drawer";
 import myPin from "./assets/pin.png";
+import axios from "axios";
+import L from "leaflet";
 import "./reset.css";
 import "./style.scss";
-import InputSearch from "./components/input";
+import "leaflet/dist/leaflet.css";
+import "leaflet-draw/dist/leaflet.draw.css";
+import "leaflet-draw";
+
 function App() {
   const mapRef = useRef();
   const positionBelgrade = { lat: 44.8178131, lng: 20.4568974 };
@@ -131,6 +136,7 @@ function App() {
     marker.addTo(map);
     marker.bindPopup("This is my Location").openPopup();
   }
+
   return (
     <div className="App">
       <MyDrawer
@@ -187,6 +193,9 @@ function App() {
               );
             })
           : null}
+        <FeatureGroup>
+          <EditControl position="topright" />
+        </FeatureGroup>
       </Map>
     </div>
   );
