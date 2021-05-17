@@ -13,11 +13,11 @@ import MyDrawer from "./components/drawer";
 import myPin from "./assets/pin.png";
 import axios from "axios";
 import L from "leaflet";
-import "./reset.css";
-import "./style.scss";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import "leaflet-draw";
+import "./reset.css";
+import "./style.scss";
 
 function App() {
   const mapRef = useRef();
@@ -27,7 +27,7 @@ function App() {
   const [positions, setPositions] = useState(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [coord, setCoord] = useState(null);
-  const [categories, setCategories] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [distance, setDistance] = useState(0);
   const [activCategory, setActivCategory] = useState("");
 
@@ -45,9 +45,11 @@ function App() {
         console.log(error.response);
       });
   };
+
   const handleClick = () => {
     setOpen(!open);
   };
+
   const getCategories = (categories) => {
     setActivCategory(categories);
     axios
@@ -65,6 +67,7 @@ function App() {
         console.log(error.response);
       });
   };
+
   const handleSearch = (event) => {
     event.preventDefault();
     setSearch(event.target.value);
@@ -82,11 +85,11 @@ function App() {
   };
 
   const handleChangeDistance = (event, newValue, data) => {
-    console.log("Bojana", data);
     setDistance(newValue);
     getCategories(activCategory);
     console.log(activCategory);
   };
+
   const clickFlyTo = (data) => {
     const { current = {} } = mapRef;
     const { leafletElement: map } = current;
@@ -94,12 +97,15 @@ function App() {
       lat: "",
       lon: "",
     };
+
     latLngCoordinates.lat = data.properties.lat;
     latLngCoordinates.lon = data.properties.lon;
+
     setCoord(latLngCoordinates);
     map.flyTo(latLngCoordinates, 15, {
       duration: 2,
     });
+
     const LeafIcon = L.Icon.extend({
       options: {
         iconSize: [40, 45],
@@ -116,6 +122,7 @@ function App() {
     marker.bindPopup("This is the selected location").openPopup();
     L.circle(latLngCoordinates, { radius: 5000 }).addTo(map);
   };
+
   useEffect(() => {
     const { current = {} } = mapRef;
     const { leafletElement: map } = current;
@@ -160,6 +167,7 @@ function App() {
         getCategorie={getCategories}
         distance={distance}
         handleChangeDistance={handleChangeDistance}
+        selectedLocation={coord}
       />
       <InputSearch
         handleClick={handleClick}

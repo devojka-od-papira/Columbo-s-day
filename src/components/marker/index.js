@@ -1,7 +1,10 @@
 import React from "react";
+import L from "leaflet";
 
-function Markers() {
-  return <div></div>;
-}
+const CustomMarker = ({ icon, latLngCoordinates }) => {
+  const marker = L.marker(latLngCoordinates, { icon });
 
-export default Markers;
+  return marker;
+};
+
+export default CustomMarker;

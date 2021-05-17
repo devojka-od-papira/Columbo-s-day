@@ -17,9 +17,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Categories({ getCategorie, searchCategories }) {
+function Categories({ getCategorie, selectedLocation }) {
   const classes = useStyles();
-
+  console.log("sele", selectedLocation);
   return (
     <div className={classes.root}>
       <Autocomplete
@@ -33,6 +33,7 @@ function Categories({ getCategorie, searchCategories }) {
         renderOption={(option) => (
           <Box onClick={() => getCategorie(option.fullName)}>{option.name}</Box>
         )}
+        disabled={!selectedLocation}
         renderInput={(params) => (
           <TextField
             color="secondary"

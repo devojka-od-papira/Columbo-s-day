@@ -23,7 +23,13 @@ const useStyles = makeStyles({
     fontSize: 24,
   },
 });
-const MyDrawer = ({ open, getCategorie, distance, handleChangeDistance }) => {
+const MyDrawer = ({
+  open,
+  getCategorie,
+  distance,
+  handleChangeDistance,
+  selectedLocation,
+}) => {
   const classes = useStyles();
   const listName = [
     { name: "Mapa", icon: <MapIcon /> },
@@ -47,7 +53,10 @@ const MyDrawer = ({ open, getCategorie, distance, handleChangeDistance }) => {
           </List>
           <Divider />
         </div>
-        <Categories getCategorie={getCategorie} />
+        <Categories
+          getCategorie={getCategorie}
+          selectedLocation={selectedLocation}
+        />
         <MySlider
           distance={distance}
           handleChangeDistance={handleChangeDistance}
