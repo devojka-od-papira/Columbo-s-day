@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { TileLayer, Map, Marker, Popup, FeatureGroup } from "react-leaflet";
+import {
+  TileLayer,
+  Map,
+  Marker,
+  Popup,
+  FeatureGroup,
+  Circle,
+} from "react-leaflet";
 import { EditControl } from "react-leaflet-draw";
 import InputSearch from "./components/input";
 import MyDrawer from "./components/drawer";
@@ -117,6 +124,7 @@ function App() {
     });
     map.on("locationfound", findMyLocation);
   }, []);
+
   function findMyLocation(event) {
     const { current = {} } = mapRef;
     const { leafletElement: map } = current;
@@ -128,9 +136,17 @@ function App() {
         popupAnchor: [-12, -100],
       },
     });
+
     const myIcon = new LeafIcon({
       iconUrl: myPin,
     });
+
+    L.control
+      .zoom({
+        position: "topright",
+      })
+      .addTo(map);
+
     const latLng = event.latlng;
     const marker = L.marker(latLng, { icon: myIcon });
     marker.addTo(map);
@@ -194,7 +210,13 @@ function App() {
             })
           : null}
         <FeatureGroup>
-          <EditControl position="topright" />
+          <EditControl
+            position="topright"
+            // onEdited={this._onEditPath}
+            // onCreated={this._onCreate}
+            // onDeleted={this._onDeleted}
+          />
+          <Circle center={[51.51, -0.06]} radius={200} />
         </FeatureGroup>
       </Map>
     </div>
