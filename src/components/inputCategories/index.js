@@ -4,6 +4,9 @@ import { Box } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import { listCategories } from "./categories";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchByCategoryAction } from "../../actions";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
@@ -17,8 +20,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function Categories({ getCategorie, selectedLocation }) {
+function Categories({ selectedLocation }) {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const distance = useSelector((state) => state.geodata.distance);
+  const myCoordinates = useSelector((state) => state.geodata.myCoordinates);
+
+  const handleCategory = (category) => {
+    dispatch(fetchByCategoryAction(category, myCoordinates, distance));
+  };
+
   console.log("sele", selectedLocation);
   return (
     <div className={classes.root}>
@@ -31,7 +42,9 @@ function Categories({ getCategorie, selectedLocation }) {
         includeInputInList
         fullWidth
         renderOption={(option) => (
-          <Box onClick={() => getCategorie(option.fullName)}>{option.name}</Box>
+          <Box onClick={() => handleCategory(option.fullName)}>
+            {option.name}
+          </Box>
         )}
         disabled={!selectedLocation}
         renderInput={(params) => (

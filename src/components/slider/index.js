@@ -2,6 +2,8 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Slider from "@material-ui/core/Slider";
+import { useDispatch, useSelector } from "react-redux";
+import { setDistanceAction } from "../../actions";
 
 const useStyles = makeStyles({
   root: {
@@ -21,8 +23,16 @@ const marks = [
   },
 ];
 
-function MySlider({ distance, handleChangeDistance }) {
+function MySlider() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const distance = useSelector((state) => {
+    return state.geodata.distance;
+  });
+
+  const handleChangeDistance = (event, newValue) => {
+    dispatch(setDistanceAction(newValue));
+  };
 
   return (
     <div className={classes.root}>

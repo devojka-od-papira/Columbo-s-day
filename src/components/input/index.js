@@ -49,6 +49,7 @@ const InputSearch = ({
   clickFlyTo,
 }) => {
   const classes = useStyles();
+
   return (
     <Paper onSubmit={onSubmit} component="form" className={classes.root}>
       <IconButton

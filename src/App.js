@@ -7,12 +7,14 @@ import {
   FeatureGroup,
   Circle,
 } from "react-leaflet";
+import { useDispatch, useSelector } from "react-redux";
 import { EditControl } from "react-leaflet-draw";
 import InputSearch from "./components/input";
 import MyDrawer from "./components/drawer";
 import myPin from "./assets/pin.png";
 import axios from "axios";
 import L from "leaflet";
+import { findMyLocationAction } from "./actions";
 import "leaflet/dist/leaflet.css";
 import "leaflet-draw/dist/leaflet.draw.css";
 import "leaflet-draw";
@@ -21,15 +23,14 @@ import "./style.scss";
 
 function App() {
   const mapRef = useRef();
+  const dispatch = useDispatch();
   const positionBelgrade = { lat: 44.8178131, lng: 20.4568974 };
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState(null);
   const [positions, setPositions] = useState(null);
-  const [searchOpen, setSearchOpen] = useState(false);
   const [coord, setCoord] = useState(null);
-  const [categories, setCategories] = useState([]);
-  const [distance, setDistance] = useState(0);
-  const [activCategory, setActivCategory] = useState("");
+
+  const categoryData = useSelector((state) => state.geodata.categoryData);
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -50,24 +51,6 @@ function App() {
     setOpen(!open);
   };
 
-  const getCategories = (categories) => {
-    setActivCategory(categories);
-    axios
-      .get(
-        `https://api.geoapify.com/v2/places?categories=${categories}&filter=circle:${
-          coord.lon
-        },${coord.lat},${
-          distance * 100
-        }&limit=20&apiKey=1d376793ac4e40d7aa00db1c2018506a`
-      )
-      .then((response) => {
-        setCategories(response.data.features);
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
-  };
-
   const handleSearch = (event) => {
     event.preventDefault();
     setSearch(event.target.value);
@@ -77,17 +60,10 @@ function App() {
       )
       .then((response) => {
         setPositions(response.data.features);
-        setSearchOpen(true);
       })
       .catch((error) => {
         console.log(error.response);
       });
-  };
-
-  const handleChangeDistance = (event, newValue, data) => {
-    setDistance(newValue);
-    getCategories(activCategory);
-    console.log(activCategory);
   };
 
   const clickFlyTo = (data) => {
@@ -156,19 +132,15 @@ function App() {
 
     const latLng = event.latlng;
     const marker = L.marker(latLng, { icon: myIcon });
+
+    dispatch(findMyLocationAction(latLng));
     marker.addTo(map);
     marker.bindPopup("This is my Location").openPopup();
   }
 
   return (
     <div className="App">
-      <MyDrawer
-        open={open}
-        getCategorie={getCategories}
-        distance={distance}
-        handleChangeDistance={handleChangeDistance}
-        selectedLocation={coord}
-      />
+      <MyDrawer open={open} selectedLocation={coord} />
       <InputSearch
         handleClick={handleClick}
         onSubmit={onSubmit}
@@ -187,8 +159,8 @@ function App() {
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {categories
-          ? categories.map((coordinates, index) => {
+        {categoryData
+          ? categoryData.map((coordinates, index) => {
               return (
                 <Marker
                   key={index}
@@ -218,12 +190,7 @@ function App() {
             })
           : null}
         <FeatureGroup>
-          <EditControl
-            position="topright"
-            // onEdited={this._onEditPath}
-            // onCreated={this._onCreate}
-            // onDeleted={this._onDeleted}
-          />
+          <EditControl position="topright" />
           <Circle center={[51.51, -0.06]} radius={200} />
         </FeatureGroup>
       </Map>
