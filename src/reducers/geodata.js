@@ -6,6 +6,7 @@ import {
   FETCH_BY_CATEGORY_REQEST,
   FETCH_BY_CATEGORY_SUCCESS,
   FETCH_BY_CATEGORY_ERROR,
+  SEARCH_LOCATION,
 } from "../actionTypes";
 
 const initalState = {
@@ -15,6 +16,7 @@ const initalState = {
   fetchingCategry: false,
   categoryData: [],
   fetchingCategryError: false,
+  locations: [],
 };
 
 export default (state = initalState, action) => {
@@ -46,6 +48,11 @@ export default (state = initalState, action) => {
     case FETCH_BY_CATEGORY_ERROR:
       return {
         ...state,
+      };
+    case SEARCH_LOCATION:
+      return {
+        ...state,
+        locations: action.payload.locations,
       };
     default:
       return state;

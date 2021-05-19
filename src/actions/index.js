@@ -6,6 +6,7 @@ import {
   FETCH_BY_CATEGORY_ERROR,
   FETCH_BY_CATEGORY_SUCCESS,
   FETCH_BY_CATEGORY_REQEST,
+  SEARCH_LOCATION,
 } from "../actionTypes";
 
 export const findMyLocationAction = (latLng) => {
@@ -50,4 +51,22 @@ export const fetchByCategoryAction = (category, coordinate, distance) => {
   };
 };
 
-export const submitSearch = (searchValue) => {};
+export const submitSearchAction = (searchValue) => {
+  return (dispatch) => {
+    axios
+      .get(
+        `https://api.geoapify.com/v1/geocode/search?text=${searchValue}&apiKey=1d376793ac4e40d7aa00db1c2018506a`
+      )
+      .then((response) => {
+        dispatch({
+          type: SEARCH_LOCATION,
+          payload: {
+            locations: response.data.features,
+          },
+        });
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
+  };
+};

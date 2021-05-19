@@ -30,7 +30,6 @@ function Categories({ selectedLocation }) {
     dispatch(fetchByCategoryAction(category, myCoordinates, distance));
   };
 
-  console.log("sele", selectedLocation);
   return (
     <div className={classes.root}>
       <Autocomplete

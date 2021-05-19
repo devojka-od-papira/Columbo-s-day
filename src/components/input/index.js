@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box, IconButton, Paper } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
@@ -8,6 +9,8 @@ import DirectionsRoundedIcon from "@material-ui/icons/DirectionsRounded";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import LocationCityIcon from "@material-ui/icons/LocationCity";
+import { submitSearchAction } from "../../actions";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     padding: "2px 4px",
@@ -41,14 +44,24 @@ const useStyles = makeStyles((theme) => ({
     width: 370,
   },
 }));
-const InputSearch = ({
-  handleClick,
-  onSubmit,
-  handleSearch,
-  positions,
-  clickFlyTo,
-}) => {
+const InputSearch = ({ handleClick, positions, clickFlyTo }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const [location, setLocation] = useState("");
+  const locations = useSelector((state) => state.geodata.locations);
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+    setLocation(event.target.value);
+
+    dispatch(submitSearchAction(event.target.value));
+  };
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+
+    dispatch(submitSearchAction(location));
+  };
 
   return (
     <Paper onSubmit={onSubmit} component="form" className={classes.root}>
@@ -61,8 +74,8 @@ const InputSearch = ({
       </IconButton>
       <Autocomplete
         className={classes.input}
-        id="auto-complete"
-        options={positions ? positions : []}
+        id="auto-complete2"
+        options={locations}
         autoComplete
         getOptionLabel={(option) => option.properties?.formatted}
         onInputChange={handleSearch}
@@ -80,6 +93,7 @@ const InputSearch = ({
             {...params}
             label="Search maps"
             margin="dense"
+            value={location}
           />
         )}
       ></Autocomplete>

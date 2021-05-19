@@ -12,7 +12,6 @@ import { EditControl } from "react-leaflet-draw";
 import InputSearch from "./components/input";
 import MyDrawer from "./components/drawer";
 import myPin from "./assets/pin.png";
-import axios from "axios";
 import L from "leaflet";
 import { findMyLocationAction } from "./actions";
 import "leaflet/dist/leaflet.css";
@@ -26,44 +25,15 @@ function App() {
   const dispatch = useDispatch();
   const positionBelgrade = { lat: 44.8178131, lng: 20.4568974 };
   const [open, setOpen] = useState(false);
-  const [search, setSearch] = useState(null);
-  const [positions, setPositions] = useState(null);
   const [coord, setCoord] = useState(null);
+  const [locationCoordinates, setLocationCoordinats] = useState(null);
 
   const categoryData = useSelector((state) => state.geodata.categoryData);
-
-  const onSubmit = (event) => {
-    event.preventDefault();
-    axios
-      .get(
-        `https://api.geoapify.com/v1/geocode/search?text=${search}&apiKey=1d376793ac4e40d7aa00db1c2018506a`
-      )
-      .then((response) => {
-        setPositions(response.data.features);
-        setOpen(true);
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
-  };
+  const locations = useSelector((state) => state.geodata.locations);
+  const distance = useSelector((state) => state.geodata.distance);
 
   const handleClick = () => {
     setOpen(!open);
-  };
-
-  const handleSearch = (event) => {
-    event.preventDefault();
-    setSearch(event.target.value);
-    axios
-      .get(
-        `https://api.geoapify.com/v1/geocode/search?text=${event.target.value}&apiKey=1d376793ac4e40d7aa00db1c2018506a`
-      )
-      .then((response) => {
-        setPositions(response.data.features);
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
   };
 
   const clickFlyTo = (data) => {
@@ -73,6 +43,8 @@ function App() {
       lat: "",
       lon: "",
     };
+
+    setLocationCoordinats(data);
 
     latLngCoordinates.lat = data.properties.lat;
     latLngCoordinates.lon = data.properties.lon;
@@ -108,6 +80,21 @@ function App() {
     map.on("locationfound", findMyLocation);
   }, []);
 
+  useEffect(() => {
+    const { current = {} } = mapRef;
+    const { leafletElement: map } = current;
+    const latLngCoordinates = {
+      lat: "",
+      lon: "",
+    };
+
+    // if (locationCoordinates) {
+    //   latLngCoordinates.lat = locationCoordinates?.properties.lat;
+    //   latLngCoordinates.lon = locationCoordinates?.properties.lon;
+    //   L.circle(latLngCoordinates, { radius: distance * 100 }).addTo(map);
+    // }
+  }, [distance]);
+
   function findMyLocation(event) {
     const { current = {} } = mapRef;
     const { leafletElement: map } = current;
@@ -141,13 +128,7 @@ function App() {
   return (
     <div className="App">
       <MyDrawer open={open} selectedLocation={coord} />
-      <InputSearch
-        handleClick={handleClick}
-        onSubmit={onSubmit}
-        positions={positions}
-        clickFlyTo={clickFlyTo}
-        handleSearch={handleSearch}
-      />
+      <InputSearch handleClick={handleClick} clickFlyTo={clickFlyTo} />
       <Map
         center={positionBelgrade}
         zoom={13}
@@ -174,8 +155,8 @@ function App() {
               );
             })
           : null}
-        {positions
-          ? positions.map((coordinates, index) => {
+        {locations
+          ? locations.map((coordinates, index) => {
               return (
                 <Marker
                   key={index}
